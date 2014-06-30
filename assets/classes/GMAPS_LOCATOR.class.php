@@ -4,6 +4,7 @@
 
 		class GMAPS_LOCATOR extends GMAPS_LOCATOR_Options {
 			private $table_map;
+			private $settings;
 			public function __construct() {
 				parent::__construct();
 				$this->get_settings();
@@ -205,20 +206,16 @@
 	    public function add_plugin_page(){
 	        add_options_page(
 	            'Settings Admin',
-	            'My Settings',
+	            'GMaps Locator',
 	            'manage_options',
-	            'my-setting-admin',
+	            'gmaps-locator',
 	            array( $this, 'create_admin_page' )
 	        );
 	    }
-
-	    /**
-	     * Options page callback
-	     */
-	    public function create_admin_page()
-	    {
+      //admin options page content
+	    public function create_admin_page(){
 	        // Set class property
-	        $this->options = get_option( 'my_option_name' );
+	        $this->settings = get_option( 'locator_options' );
 	        ?>
 	        <div class="wrap">
 	            <?php screen_icon(); ?>
@@ -226,94 +223,59 @@
 	            <form method="post" action="options.php">
 	            <?php
 	                // This prints out all hidden setting fields
-	                settings_fields( 'my_option_group' );
-	                do_settings_sections( 'my-setting-admin' );
+	                settings_fields( 'gmaps_locator_options' );
+	                do_settings_sections( 'gmaps-locator' );
 	                submit_button();
 	            ?>
 	            </form>
 	        </div>
+					<hr>
+					<div class="wrap" style="max-width:800px;">
+						<h2>Help! Something went wrong!</h2>
+						<p>Sometimes things just aren't as easy as they should be and things break. It happens, it sucks, but here are some steps to find out what went wrong and why.</p>
+						<h3>Your Google API Key is invalid</h3>
+						<p>First thing's first, let's check out your API Key and make sure that it's accurate. If you're having problems with your Locator not working at all or you're getting console or alert errors then maybe the API Key wasn't copied in right. If it's not 100% correct then Google won't accept it. Enter it <em>exactly</em> as the API Console shows it, capitalizations and puncutation included.</p>
+					</div>
 	        <?php
 	    }
-
-	    /**
-	     * Register and add settings
-	     */
-	    public function page_init()
-	    {
+			//admin options page settings
+	    public function page_init(){
 	        register_setting(
-	            'my_option_group', // Option group
-	            'my_option_name', // Option name
+	            'gmaps_locator_options', // Option group
+	            'locator_options', // Option name
 	            array( $this, 'sanitize' ) // Sanitize
 	        );
 
 	        add_settings_section(
-	            'setting_section_id', // ID
-	            'My Custom Settings', // Title
+	            'gmaps-locator', // ID
+	            'Locator Settings', // Title
 	            array( $this, 'print_section_info' ), // Callback
-	            'my-setting-admin' // Page
+	            'gmaps-locator' // Page
 	        );
 
 	        add_settings_field(
-	            'id_number', // ID
-	            'ID Number', // Title
-	            array( $this, 'id_number_callback' ), // Callback
-	            'my-setting-admin', // Page
-	            'setting_section_id' // Section
-	        );
-
-	        add_settings_field(
-	            'title',
-	            'Title',
-	            array( $this, 'title_callback' ),
-	            'my-setting-admin',
-	            'setting_section_id'
+	            'google_api_key', // ID
+	            'Google API Key', // Title
+	            array( $this, 'google_api_key_callback' ), // Callback
+	            'gmaps-locator', // Page
+	            'gmaps-locator' // Section
 	        );
 	    }
-
-	    /**
-	     * Sanitize each setting field as needed
-	     *
-	     * @param array $input Contains all settings fields as array keys
-	     */
-	    public function sanitize( $input )
-	    {
+	    //admin options page input sanitization
+	    public function sanitize( $input ){
 	        $new_input = array();
-	        if( isset( $input['id_number'] ) )
-	            $new_input['id_number'] = absint( $input['id_number'] );
-
-	        if( isset( $input['title'] ) )
-	            $new_input['title'] = sanitize_text_field( $input['title'] );
-
+	        if( isset( $input['google_api_key'] ) )
+	            $new_input['google_api_key'] = sanitize_text_field( $input['google_api_key'] );
 	        return $new_input;
 	    }
-
-	    /**
-	     * Print the Section text
-	     */
-	    public function print_section_info()
-	    {
+	    public function print_section_info(){
 	        print 'Enter your settings below:';
 	    }
-
-	    /**
-	     * Get the settings option array and print one of its values
-	     */
-	    public function id_number_callback()
-	    {
+	    public function google_api_key_callback(){
 	        printf(
-	            '<input type="text" id="id_number" name="my_option_name[id_number]" value="%s" />',
-	            isset( $this->options['id_number'] ) ? esc_attr( $this->options['id_number']) : ''
-	        );
-	    }
-
-	    /**
-	     * Get the settings option array and print one of its values
-	     */
-	    public function title_callback()
-	    {
-	        printf(
-	            '<input type="text" id="title" name="my_option_name[title]" value="%s" />',
-	            isset( $this->options['title'] ) ? esc_attr( $this->options['title']) : ''
+	            '<input type="text" id="google_api_key" name="locator_options[google_api_key]" value="%s" size="38"/>
+							<br><em>If you do not have a Google API Key, <a href="https://developers.google.com/maps/documentation/javascript/tutorial#api_key">check here</a> to get one.</em>',
+	            isset( $this->settings['google_api_key'] ) ? esc_attr( $this->settings['google_api_key']) : ''
 	        );
 	    }
 
@@ -322,6 +284,10 @@
 			//shortcode & Enqueue for Locator
 			public function locator_shortcode_enqueue(){
 				//enqueue
+				function gmaps_locator_scripts() {
+					$settings = get_option( 'locator_options' );
+					wp_enqueue_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
+				} add_action( 'wp_enqueue_scripts', 'gmaps_locator_scripts' );
 
 				//shortcode
 				function locator_shortcode($atts){
@@ -329,10 +295,12 @@
 						'search' => true,
 						'tags'   => true
 					),$atts);
-					return "search = {$a['search']}";
+					return 'locator';
 				} add_shortcode('gmaps_locator','locator_shortcode');
 
 			}
+
+
 
 		}
 
