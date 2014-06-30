@@ -12,14 +12,6 @@ License: MIT
 	if(!defined('ABSPATH')) {
 		exit();
 	}
-
-	/* =======================================================
-		NOTE:  Anywhere that you see 'Plugin_Name' or
-		any derivation of that, you should change it to
-		the actual name of your plug-in and follow the
-		capitalization scheme that was used.
-	======================================================= */
-
 	// GLOBAL PATHS
 
 	/* =======================================================
@@ -30,18 +22,18 @@ License: MIT
 	======================================================= */
 
 	//this is the plug-in directory name
-	if(!defined("PLUGIN_NAME")) {
-		define("PLUGIN_NAME", trim(dirname(plugin_basename(__FILE__)), '/'));
+	if(!defined("GMAPS_LOCATOR")) {
+		define("GMAPS_LOCATOR", trim(dirname(plugin_basename(__FILE__)), '/'));
 	}
 
 	//this is the path to the plug-in's directory
-	if(!defined("PLUGIN_NAME_DIR")) {
-		define("PLUGIN_NAME_DIR", WP_PLUGIN_DIR . '/' . PLUGIN_NAME);
+	if(!defined("GMAPS_LOCATOR_DIR")) {
+		define("GMAPS_LOCATOR_DIR", WP_PLUGIN_DIR . '/' . GMAPS_LOCATOR);
 	}
 
 	//this is the url to the plug-in's directory
-	if(!defined("PLUGIN_NAME_URL")) {
-		define("PLUGIN_NAME_URL", WP_PLUGIN_URL . '/' . PLUGIN_NAME);
+	if(!defined("GMAPS_LOCATOR_URL")) {
+		define("GMAPS_LOCATOR_URL", WP_PLUGIN_URL . '/' . GMAPS_LOCATOR);
 	}
 
 	/* =======================================================
@@ -52,34 +44,24 @@ License: MIT
 	======================================================= */
 
 	// OPTIONS
-	include_once(PLUGIN_NAME_DIR . '/assets/classes/Plugin_Name_Options.class.php');
+	include_once(GMAPS_LOCATOR_DIR . '/assets/classes/GMAPS_LOCATOR_Options.class.php');
 
 	/* =======================================================
-		Open /assets/classes/Plugin_Name.class.php
+		Open /assets/classes/GMAPS_LOCATOR.class.php
 		and begin adding any functionality you need. This
 		class has some default methods you may find useful
 	======================================================= */
 
 	//LOGIC
-	include_once(PLUGIN_NAME_DIR . '/assets/classes/Plugin_Name.class.php');
+	include_once(GMAPS_LOCATOR_DIR . '/assets/classes/GMAPS_LOCATOR.class.php');
 
 	/* =======================================================
 		Any classes you add should extend the Plugin_Options_Name
 		class so that you have access to the prefixing and logging methods.
 	======================================================= */
 
-	if(class_exists('Plugin_Name')) {
-
-		$plugin_name = new Plugin_Name();
-
-		register_activation_hook(__FILE__, array($plugin_name, 'activate'));
-
-		register_deactivation_hook(__FILE__, array($plugin_name, 'deactivate'));
-
-		/* =======================================================
-			I like to keep my actions bound here instead of
-			inside a method in my classes because it makes
-			it easier to keep actions that rely on multiple
-			classes in one spot
-		======================================================= */
+	if(class_exists('GMAPS_LOCATOR')) {
+		$GMAPS_LOCATOR = new GMAPS_LOCATOR();
+		register_activation_hook(__FILE__, array($GMAPS_LOCATOR, 'activate'));
+		register_deactivation_hook(__FILE__, array($GMAPS_LOCATOR, 'deactivate'));
 	}

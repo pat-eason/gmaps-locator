@@ -1,18 +1,18 @@
 <?php
 
-	if(!class_exists('Plugin_Name_Options')) {
+	if(!class_exists('GMAPS_LOCATOR_Options')) {
 
 		//options for our plug-in
-		class Plugin_Name_Options {
+		class GMAPS_LOCATOR_Options {
 
 			//IMPORTANT: Update the version number here whenever you release a new version
 			protected $v_num = '0.0.1';
 
 			//prefix for option names, table names, and capability names
-			protected $prefix = 'plugin_name_';
+			protected $prefix = 'GMAPS_LOCATOR_';
 
 			//namespace for any Debug messages
-			protected $namespace = 'PLUGIN NAME';
+			protected $namespace = 'GMAPS LOCATOR';
 
 			//initialize vars for plugin options
 			protected $db;
