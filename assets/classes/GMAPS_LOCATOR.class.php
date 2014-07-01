@@ -1,7 +1,6 @@
 <?php
 	//class for our plug-in logic
 	if(!class_exists('GMAPS_LOCATOR') && class_exists('GMAPS_LOCATOR_Options')) {
-
 		class GMAPS_LOCATOR extends GMAPS_LOCATOR_Options {
 			private $table_map;
 			private $settings;
@@ -312,11 +311,22 @@
 			public function locator_shortcode_enqueue(){
 				//register
 				function gmaps_locator_scripts() {
-					$settings = get_option( 'locator_options' );
 					wp_register_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
 					wp_register_script( 'gmaps-locator-script',GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js');
+					wp_register_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');
+				} add_action( 'wp_enqueue_scripts', 'gmaps_locator_scripts' );
+
+				//shortcode
+				function locator_shortcode($atts){
+					$a = shortcode_atts(array(
+						'search' => true,
+						'tags'   => true,
+						'debug'  => false,
+						'geolocate' => true
+					),$atts);
 
 					//create locations array for JSON
+					$settings = get_option( 'locator_options' );
 					$args = array( 'posts_per_page' => -1,
 							'offset'           => 0,
 							'category'         => '',
@@ -342,36 +352,25 @@
 						$i++;
 					}
 					$settings['locations'] = $locs;
-
 					$settings['ajax_url'] = admin_url( 'admin-ajax.php' );
+					$settings['shortcode'] = $a;
 					wp_localize_script( 'gmaps-locator-script', 'gmaps_locator_data', $settings );
-					wp_register_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');
 
-				} add_action( 'wp_enqueue_scripts', 'gmaps_locator_scripts' );
-
-				//shortcode
-				function locator_shortcode($atts){
 					//enqueue scripts
 					wp_enqueue_script('gmaps-locator');
 					wp_enqueue_script('gmaps-locator-script');
 					wp_enqueue_style('gmaps-locator-style');
+
 					//shortcode logic
-					$a = shortcode_atts(array(
-						'search' => true,
-						'tags'   => true,
-						'debug'  => false,
-					),$atts);
 					if($a['debug'] == true){
 						$debug .= '<hr><h6>Locator Debug:</h6>';
-						$debug .= 'search = '.$a['search'];
-						$debug .= 'tags = '.$a['tags'];
-						$debug .= 'dir = '.GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js';
+						$debug .= 'search = '.$a['search'].'<br>';
+						$debug .= 'tags = '.$a['tags'].'<br>';
 						$debug .= '<br><br><hr>';
 					}
 					$locator = '<div id="gmaps-locator"></div>';
 					return $debug . $locator;
 				} add_shortcode('gmaps_locator','locator_shortcode');
-
 			}
 
 			//location post type and taxonomy
