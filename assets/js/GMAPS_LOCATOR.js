@@ -1,17 +1,10 @@
-(function($) {
-
-	var plugin = (function() {
-		var pub = {};
-
-		pub.init = function() {
-			//initialization logic here
-		};
-
-		return pub;
-	}());
-
-	$(function() {
-		plugin.init();
-	});
-
-})(jQuery);
+function initialize() {
+  var mapOptions = {
+    center: new google.maps.LatLng(-34.397, 150.644),
+    zoom: 8
+  };
+  var map = new google.maps.Map(document.getElementById("gmaps-locator"),
+      mapOptions);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+console.log('gmaps locator loaded');
