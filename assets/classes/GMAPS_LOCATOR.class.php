@@ -13,9 +13,10 @@
 				//locator admin/settings page
 				add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'page_init' ) );
-				//locator shortcode and enqueue
+				$this->locator_admin();
+				//locator functions
 				$this->locator_shortcode_enqueue();
-
+				$this->locator_posttype_tax();
 			}
 
 			//our plug-in activation
@@ -202,6 +203,15 @@
 			}
 
 
+			//admin scripts and styles
+			public function locator_admin(){
+				function locator_admin_scripts() {
+				  wp_enqueue_style( 'GMAP_LOCATOR-css-admin',GMAPS_LOCATOR_URL . '/assets/css/GMAPS_LOCATOR-admin.css');
+					wp_enqueue_script( 'GMAP_LOCATOR-js-admin', GMAPS_LOCATOR_URL . '/assets/js/GMAPS_LOCATOR-admin.js', array('jquery'));
+				}
+				add_action( 'admin_enqueue_scripts', 'locator_admin_scripts' );
+			}
+
 			//admin options page
 	    public function add_plugin_page(){
 	        add_options_page(
@@ -336,7 +346,41 @@
 
 			}
 
-
+			//location post type and taxonomy
+			public function locator_posttype_tax(){
+				add_action( 'init', 'locator_init' );
+				function locator_init() {
+					$labels = array(
+						'name'               => _x( 'Locations', 'post type general name', 'GMAPS_LOCATOR' ),
+						'singular_name'      => _x( 'Location', 'post type singular name', 'GMAPS_LOCATOR' ),
+						'menu_name'          => _x( 'Locations', 'admin menu', 'GMAPS_LOCATOR' ),
+						'name_admin_bar'     => _x( 'Location', 'add new on admin bar', 'GMAPS_LOCATOR' ),
+						'add_new'            => _x( 'Add New', 'location', 'GMAPS_LOCATOR' ),
+						'add_new_item'       => __( 'Add New Location', 'GMAPS_LOCATOR' ),
+						'new_item'           => __( 'New Location', 'GMAPS_LOCATOR' ),
+						'edit_item'          => __( 'Edit Location', 'GMAPS_LOCATOR' ),
+						'view_item'          => __( 'View Location', 'GMAPS_LOCATOR' ),
+						'all_items'          => __( 'All Locations', 'GMAPS_LOCATOR' ),
+						'search_items'       => __( 'Search Locations', 'GMAPS_LOCATOR' ),
+						'parent_item_colon'  => __( 'Parent Locations:', 'GMAPS_LOCATOR' ),
+						'not_found'          => __( 'No locations found.', 'GMAPS_LOCATOR' ),
+						'not_found_in_trash' => __( 'No locations found in Trash.', 'GMAPS_LOCATOR' )
+					);
+					$args = array(
+						'labels'             => $labels,
+						'public'             => true,
+						'publicly_queryable' => false,
+						'show_ui'            => true,
+						'show_in_menu'       => true,
+						'query_var'          => true,
+						'capability_type'    => 'post',
+						'has_archive'        => false,
+						'hierarchical'       => false,
+						'menu_position'      => null,
+						'supports'           => array('title')
+					); register_post_type( 'gmaps_locations', $args );
+				}
+			}
 
 		}
 

@@ -36,6 +36,12 @@ License: MIT
 		define("GMAPS_LOCATOR_URL", WP_PLUGIN_URL . '/' . GMAPS_LOCATOR);
 	}
 
+	//include acf-lite
+	define('ACF_LITE',true);
+	include_once(GMAPS_LOCATOR_DIR.'/assets/libs/advanced-custom-fields/acf.php');
+	include_once(GMAPS_LOCATOR_DIR.'/assets/libs/advanced-custom-fields-coordinates/acf-coordinates.php');
+	include_once(GMAPS_LOCATOR_DIR . '/assets/classes/GMAPS_LOCATOR_fields.php');
+
 	/* =======================================================
 		Open /assets/classes/Plugin_Options.class.php
 		and add any tables, options, or capabilities
