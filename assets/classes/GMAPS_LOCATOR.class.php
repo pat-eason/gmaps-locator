@@ -204,9 +204,28 @@
 
 			//admin scripts and styles
 			public function locator_admin(){
-				function locator_admin_scripts() {
+				function locator_admin_scripts($hook_suffix) {
 				  wp_enqueue_style( 'GMAP_LOCATOR-css-admin',GMAPS_LOCATOR_URL . '/assets/css/GMAPS_LOCATOR-admin.css');
-					wp_enqueue_script( 'GMAP_LOCATOR-js-admin', GMAPS_LOCATOR_URL . '/assets/js/GMAPS_LOCATOR-admin.js', array('jquery'));
+					if($hook_suffix == 'settings_page_gmaps-locator'){
+						wp_enqueue_script( 'GMAP_LOCATOR-google', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA71cJRCCMCcn_VsXSj4wSF4HTX8GyqD24');
+						wp_enqueue_script( 'GMAP_LOCATOR-js-admin', GMAPS_LOCATOR_URL . '/assets/js/GMAPS_LOCATOR-admin.js', array('jquery'));
+						$settings = get_option( 'locator_options' );
+						if(!$settings['gmaps_latitude']){
+								$settings['gmaps_latitude'] = 61.1917528;
+						}
+						if(!$settings['gmaps_longitude']){
+								$settings['gmaps_longitude'] = -149.8598051;
+						}
+						if(!$settings['zoom_level']){
+								$settings['zoom_level'] = 13;
+						}
+						$args = array(
+							'latitude'  => $settings['gmaps_latitude'],
+							'longitude' => $settings['gmaps_longitude'],
+							'zoom'      => $settings['zoom_level']
+						);
+						wp_localize_script( 'GMAP_LOCATOR-js-admin', 'GMAPS_LOCATOR_data', $args );
+					}
 				}
 				add_action( 'admin_enqueue_scripts', 'locator_admin_scripts' );
 			}
@@ -228,7 +247,7 @@
 	        ?>
 	        <div class="wrap">
 	            <?php screen_icon(); ?>
-	            <h2>My Settings</h2>
+	            <h2>Google Maps Locator Configurator</h2>
 	            <form method="post" action="options.php">
 	            <?php
 	                // This prints out all hidden setting fields
@@ -277,6 +296,27 @@
 							'gmaps-locator', // Page
 							'gmaps-locator' // Section
 					);
+					add_settings_field(
+							'gmaps_latitude', // ID
+							'Latitude', // Title
+							array( $this, 'gmaps_lat_callback' ), // Callback
+							'gmaps-locator', // Page
+							'gmaps-locator' // Section
+					);
+					add_settings_field(
+							'gmaps_longitude', // ID
+							'Longitude', // Title
+							array( $this, 'gmaps_lng_callback' ), // Callback
+							'gmaps-locator', // Page
+							'gmaps-locator' // Section
+					);
+					add_settings_field(
+							'zoom_level', // ID
+							'Zoom Level', // Title
+							array( $this, 'zoom_level_callback' ), // Callback
+							'gmaps-locator', // Page
+							'gmaps-locator' // Section
+					);
 	    }
 	    //admin options page input sanitization
 	    public function sanitize( $input ){
@@ -284,8 +324,14 @@
 	        if( isset( $input['google_api_key'] ) )
 	            $new_input['google_api_key'] = sanitize_text_field( $input['google_api_key'] );
 
-					if( isset( $input['map_center'] ) )
-							$new_input['map_center'] = sanitize_text_field( $input['map_center'] );
+					if( isset( $input['gmaps_longitude'] ) )
+							$new_input['gmaps_longitude'] = sanitize_text_field( $input['gmaps_longitude'] );
+
+					if( isset( $input['gmaps_latitude'] ) )
+							$new_input['gmaps_latitude'] = sanitize_text_field( $input['gmaps_latitude'] );
+
+					if( isset( $input['zoom_level'] ) )
+							$new_input['zoom_level'] = sanitize_text_field( $input['zoom_level'] );
 					return $new_input;
 	    }
 	    public function print_section_info(){
@@ -300,12 +346,28 @@
 	    }
 			public function map_center_callback(){
 					printf(
-							'<input type="text" id="map_center" name="locator_options[map_center]" value="%s" size="38"/>',
-							isset( $this->settings['map_center'] ) ? esc_attr( $this->settings['map_center']) : ''
+							'<em>Zoom and Pan the Map below to determine the default latitude, longitude, and zoom of the map. Or, if you\'re feeling adventurous, add in your own lat, long, and zoom levels in the fields below.</em>
+							<div id="gmaps_locator_map"></div>'
 					);
 			}
-
-
+			public function gmaps_lat_callback(){
+					printf(
+							'<input type="text" id="gmaps_latitude" name="locator_options[gmaps_latitude]" value="%s" size="38"/>',
+							isset( $this->settings['gmaps_latitude'] ) ? esc_attr( $this->settings['gmaps_latitude']) : ''
+					);
+			}
+			public function gmaps_lng_callback(){
+					printf(
+							'<input type="text" id="gmaps_longitude" name="locator_options[gmaps_longitude]" value="%s" size="38"/>',
+							isset( $this->settings['gmaps_longitude'] ) ? esc_attr( $this->settings['gmaps_longitude']) : ''
+					);
+			}
+			public function zoom_level_callback(){
+					printf(
+							'<input type="number" min="1" max="18" id="zoom_level" name="locator_options[zoom_level]" value="%s" />',
+							isset( $this->settings['zoom_level'] ) ? esc_attr( $this->settings['zoom_level']) : '1'
+					);
+			}
 
 			//shortcode & register for Locator
 			public function locator_shortcode_enqueue(){

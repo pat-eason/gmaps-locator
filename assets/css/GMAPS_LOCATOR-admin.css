@@ -5,3 +5,4 @@
 		/assets/css/scss/ directory
 	======================================================= */
 	li#menu-posts-gmaps_locations div.wp-menu-image:before{content: "\f231";}
+	#gmaps_locator_map{height:300px;width:100%;margin:25px 0 0;}
