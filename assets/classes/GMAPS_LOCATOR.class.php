@@ -315,6 +315,28 @@
 					$settings = get_option( 'locator_options' );
 					wp_register_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
 					wp_register_script( 'gmaps-locator-script',GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js');
+
+					//create locations array for JSON
+					$args = array( 'posts_per_page' => -1,
+							'offset'           => 0,
+							'category'         => '',
+							'orderby'          => 'post_date',
+							'order'            => 'DESC',
+							'include'          => '',
+							'exclude'          => '',
+							'meta_key'         => '',
+							'meta_value'       => '',
+							'post_type'        => 'post',
+							'post_mime_type'   => '',
+							'post_parent'      => '',
+							'post_status'      => 'publish',
+							'suppress_filters' => true );
+					$posts = get_posts( $args );
+					foreach($posts as $post){
+
+					}
+					$settings['locations'] = $posts;
+
 					$settings['ajax_url'] = admin_url( 'admin-ajax.php' );
 					wp_localize_script( 'gmaps-locator-script', 'gmaps_locator_data', $settings );
 					wp_register_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');

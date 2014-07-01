@@ -1,5 +1,5 @@
 function initialize() {
-	console.log(gmaps_locator_data);
+	console.log(gmaps_locator_data.locations);
 	//set default map options
   var mapOptions = {
     center: new google.maps.LatLng(40.0171852,-97.240944),
