@@ -260,13 +260,24 @@
 	            'gmaps-locator', // Page
 	            'gmaps-locator' // Section
 	        );
+
+					add_settings_field(
+							'map_center', // ID
+							'Map Center', // Title
+							array( $this, 'map_center_callback' ), // Callback
+							'gmaps-locator', // Page
+							'gmaps-locator' // Section
+					);
 	    }
 	    //admin options page input sanitization
 	    public function sanitize( $input ){
 	        $new_input = array();
 	        if( isset( $input['google_api_key'] ) )
 	            $new_input['google_api_key'] = sanitize_text_field( $input['google_api_key'] );
-	        return $new_input;
+
+					if( isset( $input['map_center'] ) )
+							$new_input['map_center'] = sanitize_text_field( $input['map_center'] );
+					return $new_input;
 	    }
 	    public function print_section_info(){
 	        print 'Enter your settings below:';
@@ -278,22 +289,35 @@
 	            isset( $this->settings['google_api_key'] ) ? esc_attr( $this->settings['google_api_key']) : ''
 	        );
 	    }
+			public function map_center_callback(){
+					printf(
+							'<input type="text" id="map_center" name="locator_options[map_center]" value="%s" size="38"/>',
+							isset( $this->settings['map_center'] ) ? esc_attr( $this->settings['map_center']) : ''
+					);
+			}
 
 
 
-			//shortcode & Enqueue for Locator
+			//shortcode & register for Locator
 			public function locator_shortcode_enqueue(){
-				//enqueue
+				//register
 				function gmaps_locator_scripts() {
 					$settings = get_option( 'locator_options' );
-					wp_enqueue_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
-					wp_enqueue_script( 'gmaps-locator-script',GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js');
-					wp_enqueue_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');
+					wp_register_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
+					wp_register_script( 'gmaps-locator-script',GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js');
+					$settings['ajax_url'] = admin_url( 'admin-ajax.php' );
+					wp_localize_script( 'gmaps-locator-script', 'gmaps_locator_data', $settings );
+					wp_register_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');
 
 				} add_action( 'wp_enqueue_scripts', 'gmaps_locator_scripts' );
 
 				//shortcode
 				function locator_shortcode($atts){
+					//enqueue scripts
+					wp_enqueue_script('gmaps-locator');
+					wp_enqueue_script('gmaps-locator-script');
+					wp_enqueue_style('gmaps-locator-style');
+					//shortcode logic
 					$a = shortcode_atts(array(
 						'search' => true,
 						'tags'   => true,
