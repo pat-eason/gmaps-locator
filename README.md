@@ -6,7 +6,9 @@
 Google Maps Locator does three things: gives you, the user, a way to upload multiple locations for whatever you intend to use the map for. Think locations when searching for dealerships on a car website. On top of that it adds in a taxonomy to tag those locations so you can easily organize them as well as filter those on the map. And finally, it uses a simple shortcode implementation to render your map with a few parameters to give you some extra control over the map.
 
 ## The Shortcode
+```php
 **[gmaps_locator debug=false search=true tags=false geolocate=false]**
+```
 The base usage of the Google Maps Locator shortcode is *[gmaps_locator]* which will render a Google Map using the default settings:
 
 ```php
