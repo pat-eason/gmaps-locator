@@ -5,3 +5,5 @@
 		/assets/css/scss/ directory
 	======================================================= */
 	#gmaps-locator{width:100%;height:300px;}
+	#cWrap{width:auto;min-height:50px;height:auto !important}
+	img[src*="gstatic.com/"], img[src*="googleapis.com/"] {max-width: none;}

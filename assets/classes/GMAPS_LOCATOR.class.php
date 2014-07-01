@@ -326,16 +326,22 @@
 							'exclude'          => '',
 							'meta_key'         => '',
 							'meta_value'       => '',
-							'post_type'        => 'post',
+							'post_type'        => 'gmaps_locations',
 							'post_mime_type'   => '',
 							'post_parent'      => '',
 							'post_status'      => 'publish',
 							'suppress_filters' => true );
 					$posts = get_posts( $args );
+					$locs = array();
+					$i = 0;
 					foreach($posts as $post){
-
+						$locs[$i]['ID'] = $post->ID;
+						$locs[$i]['title'] = $post->post_title;
+						$locs[$i]['coordinates'] = get_post_meta($post->ID,'coordinates',true);
+						$locs[$i]['infowindow'] = get_post_meta($post->ID,'infowindow',true);
+						$i++;
 					}
-					$settings['locations'] = $posts;
+					$settings['locations'] = $locs;
 
 					$settings['ajax_url'] = admin_url( 'admin-ajax.php' );
 					wp_localize_script( 'gmaps-locator-script', 'gmaps_locator_data', $settings );
@@ -399,7 +405,7 @@
 						'has_archive'        => false,
 						'hierarchical'       => false,
 						'menu_position'      => null,
-						'supports'           => array('title')
+						'supports'           => array('title','custom-fields')
 					); register_post_type( 'gmaps_locations', $args );
 				}
 			}
