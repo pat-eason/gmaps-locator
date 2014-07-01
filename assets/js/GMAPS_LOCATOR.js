@@ -6,7 +6,8 @@ function initialize(){
   var mapOptions = {
 		center: new google.maps.LatLng(40.0171852,-97.240944),
 		zoom: 4,
-		disableDefaultUI: true
+		zoomControl: true,
+		scaleControl: false
 	};
 
 	//init map
@@ -48,13 +49,36 @@ function initialize(){
 	//geolocation
 	if(gmaps_locator_data.shortcode.geolocate == true && navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = new google.maps.LatLng(position.coords.latitude,
-                                       position.coords.longitude);
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(pos);
 			map.setZoom(12);
     }, function() {
       handleNoGeolocation(true);
     });
   }
+
+	//places API search
+  var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  var searchBox = new google.maps.places.SearchBox(
+  /** @type {HTMLInputElement} */(input));
+	google.maps.event.addListener(searchBox, 'places_changed', function() {
+    var places = searchBox.getPlaces();
+		for (var i = 0, place; place = places[i]; i++) {
+			if (place.geometry.viewport) {
+	      map.fitBounds(place.geometry.viewport);
+	    } else {
+	      map.setCenter(place.geometry.location);
+	      map.setZoom(17);  // Why 17? Because it looks good.
+	    }
+		}
+	});
+	google.maps.event.addListener(map, 'bounds_changed', function() {
+    var bounds = map.getBounds();
+    searchBox.setBounds(bounds);
+  });
+
+
+
 }
 google.maps.event.addDomListener(window, 'load', initialize);

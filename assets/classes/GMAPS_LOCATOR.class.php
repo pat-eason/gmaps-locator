@@ -373,7 +373,7 @@
 			public function locator_shortcode_enqueue(){
 				//register
 				function gmaps_locator_scripts() {
-					wp_register_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?key='.$settings['google_api_key']);
+					wp_register_script( 'gmaps-locator', 'https://maps.googleapis.com/maps/api/js?libraries=places&key='.$settings['google_api_key']);
 					wp_register_script( 'gmaps-locator-script',GMAPS_LOCATOR_URL.'/assets/js/GMAPS_LOCATOR.js');
 					wp_register_style( 'gmaps-locator-style',GMAPS_LOCATOR_URL.'/assets/css/GMAPS_LOCATOR.css');
 				} add_action( 'wp_enqueue_scripts', 'gmaps_locator_scripts' );
@@ -430,7 +430,8 @@
 						$debug .= 'tags = '.$a['tags'].'<br>';
 						$debug .= '<br><br><hr>';
 					}
-					$locator = '<div id="gmaps-locator"></div>';
+					$locator = '<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+											<div id="gmaps-locator"></div>';
 					return $debug . $locator;
 				} add_shortcode('gmaps_locator','locator_shortcode');
 			}
