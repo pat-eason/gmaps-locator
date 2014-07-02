@@ -381,8 +381,8 @@
 				//shortcode
 				function locator_shortcode($atts){
 					$a = shortcode_atts(array(
-						'search' => true,
-						'tags'   => true,
+						'search' => false,
+						'tags'   => false,
 						'debug'  => false,
 						'geolocate' => true
 					),$atts);
@@ -452,6 +452,7 @@
 			public function locator_posttype_tax(){
 				add_action( 'init', 'locator_init' );
 				function locator_init() {
+					//CPT
 					$labels = array(
 						'name'               => _x( 'Locations', 'post type general name', 'GMAPS_LOCATOR' ),
 						'singular_name'      => _x( 'Location', 'post type singular name', 'GMAPS_LOCATOR' ),
@@ -481,6 +482,34 @@
 						'menu_position'      => null,
 						'supports'           => array('title','custom-fields')
 					); register_post_type( 'gmaps_locations', $args );
+
+					//CT
+					$labels = array(
+						'name'                       => _x( 'Location Tags', 'taxonomy general name' ),
+						'singular_name'              => _x( 'Location Tag', 'taxonomy singular name' ),
+						'search_items'               => __( 'Search Location Tags' ),
+						'popular_items'              => __( 'Popular Location Tags' ),
+						'all_items'                  => __( 'All Location Tags' ),
+						'parent_item'                => null,
+						'parent_item_colon'          => null,
+						'edit_item'                  => __( 'Edit Location Tag' ),
+						'update_item'                => __( 'Update Location Tag' ),
+						'add_new_item'               => __( 'Add New Location Tag' ),
+						'new_item_name'              => __( 'New Location Tag Name' ),
+						'separate_items_with_commas' => __( 'Separate location tags with commas' ),
+						'add_or_remove_items'        => __( 'Add or remove location tags' ),
+						'choose_from_most_used'      => __( 'Choose from the most used location tags' ),
+						'not_found'                  => __( 'No location tags found.' ),
+						'menu_name'                  => __( 'Location Tags' ),
+					);
+					$args = array(
+						'hierarchical'          => false,
+						'labels'                => $labels,
+						'show_ui'               => true,
+						'show_admin_column'     => true,
+						'update_count_callback' => '_update_post_term_count',
+						'query_var'             => true,
+					); register_taxonomy( 'gmaps_locator_tags', 'gmaps_locations', $args );
 				}
 			}
 

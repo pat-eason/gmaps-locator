@@ -2,11 +2,11 @@
 /*
 Plugin Name: Google Maps Locator
 Plugin URI: http://www.pateason.com
-Description: Locator built on Google's Maps API to provide you with a searchable interface for locations. locations can be searched vie keyword or tags.
-Version: 0.0.1
+Description: Location map built on Google's Maps API. Add multiple locations, call the shortcode, and let your users find your locations based on geolocation, Google Places Search, and more.
+Version: 0.7
 Author: Pat Eason
 Author URI: http://www.pateason.com
-License: MIT
+License: GPLv2
 */
 
 	if(!defined('ABSPATH')) {

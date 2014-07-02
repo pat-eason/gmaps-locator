@@ -14,7 +14,7 @@ function initialize() {
 		var elem = document.getElementById("gmaps_latitude");
 		elem.value = pos.k;
 		var elem = document.getElementById("gmaps_longitude");
-		elem.value = pos.A;
+		elem.value = pos.B;
 	});
 
 	google.maps.event.addListener(map, 'zoom_changed', function() {

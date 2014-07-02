@@ -6,7 +6,7 @@
 		class GMAPS_LOCATOR_Options {
 
 			//IMPORTANT: Update the version number here whenever you release a new version
-			protected $v_num = '0.0.1';
+			protected $v_num = '0.7';
 
 			//prefix for option names, table names, and capability names
 			protected $prefix = 'GMAPS_LOCATOR_';

@@ -49,6 +49,7 @@ function initialize(){
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(loc.lat,loc.lng),
 			map: map,
+			animation: google.maps.Animation.DROP,
 			title:location.title,
 			infowindow:location.infowindow,
 		});
