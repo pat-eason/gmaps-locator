@@ -1,9 +1,31 @@
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
 
-	/* =======================================================
-		Any styles needed for the front-end. This should
-		be generated via the SCSS files in the
-		/assets/css/scss/ directory
-	======================================================= */
-	#gmaps-locator{width:100%;height:300px;}
-	#cWrap{width:auto;min-height:50px;height:auto !important}
-	img[src*="gstatic.com/"], img[src*="googleapis.com/"] {max-width: none;}
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+#gmaps-locator{width:100%;height:300px;}
+#cWrap{width:auto;min-height:50px;height:auto !important}
+img[src*="gstatic.com/"], img[src*="googleapis.com/"] {max-width: none;}
+
+#gmaps-locator-radius{padding:20px;}
+	.gmaps-locator-radius-entry{width:30%;margin:0 1% 10px 0;border-radius:4px;background:#fff;box-shadow:0 0 8px rgba(0,0,0,0.15);float:left;}
+	.gmaps-locator-radius-entry .gutter{padding:10px;}
+	.gmaps-locator-radius-entry h5{margin:0 0 5px;border-bottom:1px solid #eee;}
+	.gmaps-locator-radius-entry .gmaps-locator-radius-entry-content{font-size:12px;}
+
+
+
+#gmaps-locator-search{padding:20px;}

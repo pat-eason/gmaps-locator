@@ -431,7 +431,19 @@
 						$debug .= '<br><br><hr>';
 					}
 					$locator = '<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-											<div id="gmaps-locator"></div>';
+											<div id="gmaps-locator"></div>
+											<div id="gmaps-locator-radius" class="cf"></div>';
+					if($a['search'] == true){
+						$locator .= '<div id="gmaps-locator-search" class="cf">
+														<input type="text" name="gmaps-locator-searchbox" id="gmaps-locator-searchbox" placeholder="find locations" />
+														<div id="gmaps-locator-search-results"></div>
+												 </div>';
+					}
+					if($a['filter'] == true){
+						$locator .= '<div id="gmaps-locator-filter" class="cf">
+
+												 </div>';
+					}
 					return $debug . $locator;
 				} add_shortcode('gmaps_locator','locator_shortcode');
 			}
