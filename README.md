@@ -31,6 +31,14 @@ The base usage of the Google Maps Locator shortcode is *[gmaps_locator]* which w
 ```
 
 ## The Map
-So now things get interesting, we get to see what the front-end, user-facing portion of the plugin does! Again, simple stuff. Your markers are rendered on the map, which is focused based on the configuration you added in the Configurator.
+So now things get interesting, we get to see what the front-end, user-facing portion of the plugin does! Again, simple stuff. Your markers are rendered on the map, which is focused based on the configuration you added in the Configurator. It's a Google Map like you know and love: drag, drop, zoom.
 
-More to come as I make it, yo. Stay tuned.
+The map works pretty simply: navigate over the map, and any markers within the bounds of the map will be detected and rendered below the map. So, if I were to focus over top of Charleston, SC the markers for Charleston and Mt Pleasant will be detected and rendered below the map:
+
+![alt text](http://pateason.com/git-plugins/gmaps-locator/chas.png "Charleston focus")
+
+Bam! Charleston and Mt Pleasant are rendered below. Now, if I were to focus on Anchorage, AK:
+
+![alt text](http://pateason.com/git-plugins/gmaps-locator/anch.png "Anchorage, AK")
+
+And now there's only one marker detected in the bounds: Anchorage. Charleston and Mt Pleasant are now gone. This detection happens whenever you search through the searchbar in the map, drag the map, or zoom the map.
