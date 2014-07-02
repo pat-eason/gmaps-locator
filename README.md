@@ -35,7 +35,7 @@ So now things get interesting, we get to see what the front-end, user-facing por
 
 The map works pretty simply: navigate over the map, and any markers within the bounds of the map will be detected and rendered below the map. So, if I were to focus over top of Charleston, SC the markers for Charleston and Mt Pleasant will be detected and rendered below the map:
 
-![alt text](http://pateason.com/git-plugins/gmaps-locator/chas.png "Charleston focus")
+![alt text](http://pateason.com/git-plugins/gmaps-locator/chars.png "Charleston focus")
 
 Bam! Charleston and Mt Pleasant are rendered below. Now, if I were to focus on Anchorage, AK:
 
