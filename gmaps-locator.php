@@ -37,7 +37,11 @@ License: GPLv2
 	}
 
 	//include acf-lite
-	define('ACF_LITE',true);
+	//define('ACF_LITE',true);
+	if(!class_exists('Acf')){
+	  define( 'ACF_LITE' , true );
+	  include_once('advanced-custom-fields/acf.php' );
+	}
 	include_once(GMAPS_LOCATOR_DIR.'/assets/libs/advanced-custom-fields/acf.php');
 	include_once(GMAPS_LOCATOR_DIR.'/assets/libs/advanced-custom-fields-coordinates/acf-coordinates.php');
 	include_once(GMAPS_LOCATOR_DIR . '/assets/classes/GMAPS_LOCATOR_fields.php');
